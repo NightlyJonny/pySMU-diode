@@ -12,11 +12,11 @@ class SMU:
 
 	# Initialize serial comunication with default parameters
 	# port='' to test the class locally (no serial communication, commands sent to stdout, etc...)
-	def __init__ (self, port):
+	def __init__ (self, port, br=9600):
 		self.dry = (len(port) == 0)
 		if not self.dry:
 			self.ser = serial.Serial(port=port,
-						baudrate=9600,
+						baudrate=br,
 						bytesize=serial.EIGHTBITS,
 						parity=serial.PARITY_NONE,
 						stopbits=serial.STOPBITS_ONE,
