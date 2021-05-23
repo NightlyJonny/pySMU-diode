@@ -14,10 +14,10 @@ from DiodeIV import acquireIV
 def start(Compliance, SweepStart, SweepFinish, Points, baudrate, port):
 	global Results
 	# text = tkscrolled.ScrolledText(UserLabx).grid(row=9, column=17, rowspan = 5,columnspan= 16, sticky= "WE", pady=5, padx=5)
-	readings = np.array(acquireIV(port, baudrate, Compliance, SweepStart, SweepFinish, Points))
+	readings = acquireIV(port, baudrate, Compliance, SweepStart, SweepFinish, Points)
 	# text.insert(tk.END, readings)
 	# text.grid(row=6, column=1, columnspan= 1, sticky= "WE")
-	Results = np.append(Results, readings)
+	Results = np.append(Results, readings, axis=1) # Append results horizontally
 	show_plot()
 
 def show_plot():
@@ -25,7 +25,7 @@ def show_plot():
 	# DO STUFF WITH THE RESULTS!
 	
 	plt.cla()
-	plt.plot(Results)
+	plt.plot(Results[1], Results[2])
 	plt.show()
 	
 def export_csv():
@@ -54,7 +54,7 @@ def initializer():
 	Points.set(10)
 	Baudrate.set(9600)
 	Port.set('')
-	Results = np.array([], dtype=np.float64)
+	Results = np.empty((3, 0), dtype=np.float64)
 
 def serial_ports():
 	if sys.platform.startswith('win'):
@@ -87,7 +87,7 @@ Baudrate = tk.IntVar(value=9600)
 baudrate = [110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600, 115200, 128000 , 256000]
 Port = tk.StringVar()
 port = [''] + serial_ports()
-Results = np.array([], dtype=np.float64)
+Results = np.empty((3, 0), dtype=np.float64)
 
 #let's make the window responsive
 n_rows =8

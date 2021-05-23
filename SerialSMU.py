@@ -70,7 +70,7 @@ class SMU:
 
 		# Dry run
 		if self.dry:
-			return b'69.00,420.95\r'
+			return b'0.0,1.0,1.0,0.1,1.5,3.0,0.2,2.0,6.0,0.3\r'
 
 		# Real run
 		if self.ser == None:
