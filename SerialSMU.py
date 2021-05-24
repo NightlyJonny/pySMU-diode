@@ -58,7 +58,7 @@ class SMU:
 			return False
 		else:
 			for c in cmds:
-				self.sendCommand(ser, c, terminator)
+				self.sendCommand(c, terminator)
 			return True
 
 	# Send read command and get reading from the SMU
@@ -70,7 +70,7 @@ class SMU:
 
 		# Dry run
 		if self.dry:
-			return b'0.0,1.0,1.0,0.1,1.5,3.0,0.2,2.0,6.0,0.3\r'
+			return b'0.0,1.0,1.0,0.1,1.5,3.0,0.2,2.0,6.0\r'
 
 		# Real run
 		if self.ser == None:
@@ -78,7 +78,7 @@ class SMU:
 		else:
 			res = self.ser.read()
 			while res[-1] != 13:
-				res += ser.read()
+				res += self.ser.read()
 			return res
 
 	# Get readings as array of float numbers

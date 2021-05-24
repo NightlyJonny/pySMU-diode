@@ -13,10 +13,11 @@ from DiodeIV import acquireIV
 
 def start(Compliance, SweepStart, SweepFinish, Points, baudrate, port):
 	global Results
-	# text = tkscrolled.ScrolledText(UserLabx).grid(row=9, column=17, rowspan = 5,columnspan= 16, sticky= "WE", pady=5, padx=5)
+	text = tkscrolled.ScrolledText(UserLabx)
+	# breakpoint()
 	readings = acquireIV(port, baudrate, Compliance, SweepStart, SweepFinish, Points)
-	# text.insert(tk.END, readings)
-	# text.grid(row=6, column=1, columnspan= 1, sticky= "WE")
+	text.insert(tk.END, str(readings))
+	text.grid(row=10, column=17, rowspan = 5,columnspan= 16, sticky= "WE", pady=5, padx=5)
 	Results = np.append(Results, readings, axis=1) # Append results horizontally
 	show_plot()
 
@@ -25,12 +26,12 @@ def show_plot():
 	# DO STUFF WITH THE RESULTS!
 	
 	plt.cla()
-	plt.plot(Results[1], Results[2])
+	plt.plot(Results[0], Results[1], 'bo')
 	plt.show()
 	
 def export_csv():
 	global Results
-	np.savetxt("results.csv", Results, delimiter = ";")
+	np.savetxt("results.csv", np.transpose(Results), delimiter = '\t')
 	
 def progress(iterator):
 	cycling = cycle("⡇⣆⣤⣰⢸⠹⠛⠏")
@@ -48,12 +49,12 @@ def init_func():
 
 def initializer():
 	global Results    
-	Compliance.set(1.0)
-	SweepStart.set(0.1)
-	SweepFinish.set(10.0)
-	Points.set(10)
-	Baudrate.set(9600)
-	Port.set('')
+	# Compliance.set(1.0)
+	# SweepStart.set(0.1)
+	# SweepFinish.set(10.0)
+	# Points.set(10)
+	# Baudrate.set(9600)
+	# Port.set('')
 	Results = np.empty((3, 0), dtype=np.float64)
 
 def serial_ports():
@@ -90,7 +91,7 @@ port = [''] + serial_ports()
 Results = np.empty((3, 0), dtype=np.float64)
 
 #let's make the window responsive
-n_rows =8
+n_rows =15
 n_columns =32
 for i in range(n_rows):
 	UserLabx.grid_rowconfigure(i,  weight =1)
