@@ -69,5 +69,5 @@ def acquireIV (port, baudrate, compl, istart, istop, points, source='CURR', dire
 	return res
 
 if __name__ == '__main__':
-	# Function call example
+	# Function call example (on Linux)
 	print(acquireIV('/dev/ttyUSB0', 9600, 3.0, 0.0/1000, 5.0/1000, 20, source='CURR', direction='BOTH'))
