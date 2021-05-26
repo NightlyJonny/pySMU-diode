@@ -30,10 +30,6 @@ def acquireIV (port, baudrate, compl, istart, istop, points, source='CURR', dire
 		
 		f':TRIG:COUN {points}',			# Set trigger count, MUST BE THE SAME AS SWEEP POINTS.
 		':FORM:ELEM TIME,VOLT,CURR',	# Quantities sent to the PC. UPDATE "NMEAS" VARIABLE TOO.
-		# ':FORM:ELEM VOLT',	# Quantities sent to the PC. UPDATE "NMEAS" VARIABLE TOO.
-
-		# ':OUTP ON',						# Enable output.
-		# ':INIT'							# Start measurements.
 	])
 
 	# Sweeping up
@@ -44,7 +40,9 @@ def acquireIV (port, baudrate, compl, istart, istop, points, source='CURR', dire
 			':DISP:TEXT:DATA "Sweeping up..."'
 		])
 		readingsUp = smu.getReadingsArray()
-		# readingsUp = readingsUp[:-(len(readingsUp)%NMEAS)] # Discarding extra ungrouped measurements
+		extra = len(readingsUp)%NMEAS
+		if extra > 0:
+			readingsUp = readingsUp[:-extra] # Discarding extra ungrouped measurements
 
 	# Sweeping down
 	readingsDown = []
@@ -54,15 +52,12 @@ def acquireIV (port, baudrate, compl, istart, istop, points, source='CURR', dire
 			':DISP:TEXT:DATA "Sweeping down..."'
 		])
 		readingsDown = smu.getReadingsArray()
-		# readingsDown = readingsDown[:-(len(readingsDown)%NMEAS)] # Discarding extra ungrouped measurements
+		extra = len(readingsDown)%NMEAS
+		if extra > 0:
+			readingsDown = readingsDown[:-extra] # Discarding extra ungrouped measurements
 	
 	# Print results and close serial connection
-	print('-= DEBUG: ', readingsUp + readingsDown, '=-')
-	smu.sendCommands([
-		# ':OUTP OFF',
-		':DISP:TEXT:DATA "Done :)"',
-		# ':DISP:TEXT:STAT OFF'
-	])
+	smu.sendCommand(':DISP:TEXT:DATA "Done :)"')
 	smu.close()
 
 	# Transform reading from linear array to group of quantities (time, voltage, and current)
@@ -74,4 +69,5 @@ def acquireIV (port, baudrate, compl, istart, istop, points, source='CURR', dire
 	return res
 
 if __name__ == '__main__':
-	print(acquireIV('/dev/ttyUSB0', 9600, 3.0, 0.0/1000, 5.0/1000, 100, source='CURR', direction='BOTH'))
+	# Function call example
+	print(acquireIV('/dev/ttyUSB0', 9600, 3.0, 0.0/1000, 5.0/1000, 20, source='CURR', direction='BOTH'))
